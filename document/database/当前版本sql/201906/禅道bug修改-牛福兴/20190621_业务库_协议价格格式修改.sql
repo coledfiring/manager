@@ -1,0 +1,1 @@
+ALTER TABLE pe_hotel CHANGE COLUMN agree_price agreement_price varchar(100) DEFAULT NULL;

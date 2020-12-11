@@ -1,0 +1,4 @@
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('4028ae31697b6cc901697b6e5ecf000a', '微信模板消息', '1', 'FlagMessageType', '1', NULL, '发送消息类型', '');
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('4028ae31697b6cc901697b6eacd1000a', '站内信消息', '2', 'FlagMessageType', '0', NULL, '发送消息类型', '');
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('4028ae3169903ce0016993ae1f2d000a', '邮件', '3', 'FlagMessageType', '0', NULL, '发送消息类型', '');
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('4028ae3169903ce0016993ae74d0000a', '短信', '4', 'FlagMessageType', '0', NULL, '发送消息类型', '');

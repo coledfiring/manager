@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5"
+        xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+    <display-name>manager</display-name>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/spring-*.xml</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.properties</param-value>
+    </context-param>
+
+    <!--跨域支持-->
+    <filter>
+        <filter-name>corsFilter</filter-name>
+        <filter-class>com.whaty.core.framework.api.filter.CorsFilter</filter-class>
+        <init-param>
+            <param-name>allowOrigin</param-name>
+            <param-value>http://admin.webtrn.cn,http://apidoc.kfkc.webtrn.cn</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowMethods</param-name>
+            <param-value>GET,POST,PUT,OPTIONS</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowCredentials</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowHeaders</param-name>
+            <param-value>Content-Type,token,Authorization,WWW-Authenticate,Power-By,X-Requested-With,X_Requested_With</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>corsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--安全过滤器-->
+    <filter>
+        <filter-name>whatySecurityFilter</filter-name>
+        <filter-class>com.whaty.framework.common.filter.WhatySecurityFilter</filter-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/WEB-INF/classes/whatysecurity/whatysecurity.properties</param-value>
+        </init-param>
+        <init-param>
+            <param-name>rule</param-name>
+            <param-value>/WEB-INF/classes/whatysecurity/whatysecurity.xml</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>whatySecurityFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>JspAccessControlFilter</filter-name>
+        <filter-class>com.whaty.framework.common.filter.ContextSecurityFilter</filter-class>
+        <!-- 指定要禁止访问的目录(以/开头)，多个目录之间用分号隔开 -->
+        <init-param>
+            <param-name>deniedAccessDirs</param-name>
+            <param-value>/incoming</param-value>
+        </init-param>
+        <!-- 指定要禁止访问的文件类型(如禁止jsp文件)，多种文件类型之间用分号隔开 -->
+        <init-param>
+            <param-name>deniedAccessFileType</param-name>
+            <param-value>*.jsp;*.jspx</param-value>
+        </init-param>
+        <!-- 指定请求被禁止访问之后的跳转路径，一般不用配置，默认会跳转到403页面 <init-param> <param-name>redirectPath</param-name>
+            <param-value>/control/main</param-value> </init-param> -->
+    </filter>
+    <filter-mapping>
+        <filter-name>JspAccessControlFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>characterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>characterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>
+            org.springframework.web.filter.DelegatingFilterProxy
+        </filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>ssoFilter</filter-name>
+        <filter-class>com.whaty.web.filter.SsoFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ssoFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--如果是多站点项目，这里需要配置为具备数据源切换功能的filter-->
+    <filter>
+        <filter-name>OpenSessionInViewFilter</filter-name>
+        <filter-class>
+            com.whaty.core.framework.filter.MyOpenSessionInViewFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>OpenSessionInViewFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- druid监控 start -->
+    <servlet>
+        <servlet-name>DruidStatView</servlet-name>
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+        <init-param>
+            <param-name>loginUsername</param-name>
+            <param-value>whatyDruid</param-value>
+        </init-param>
+        <init-param>
+            <param-name>loginPassword</param-name>
+            <param-value>S8SD9SDF9SDF7SD7SDF9</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DruidStatView</servlet-name>
+        <url-pattern>/druid/*</url-pattern>
+    </servlet-mapping>
+    <filter>
+        <filter-name>DruidWebStatFilter</filter-name>
+        <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+        <init-param>
+            <param-name>exclusions</param-name>
+            <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+        </init-param>
+        <init-param>
+            <param-name>profileEnable</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>principalCookieName</param-name>
+            <param-value>USER_COOKIE</param-value>
+        </init-param>
+        <init-param>
+            <param-name>principalSessionName</param-name>
+            <param-value>USER_SESSION</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>DruidWebStatFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- druid监控 end -->
+
+    <!-- 请求绑定线程过滤器 start -->
+    <filter>
+        <filter-name>requestContextFilter</filter-name>
+        <filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>requestContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- 请求绑定线程过滤器 end -->
+
+    <!-- api接口切换数据源 start -->
+    <filter>
+        <filter-name>apiDataSourceChangeFilter</filter-name>
+        <filter-class>com.whaty.web.filter.ApiDataSourceChangeFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>apiDataSourceChangeFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>apiDataSourceChangeFilter</filter-name>
+        <url-pattern>/open/*</url-pattern>
+    </filter-mapping>
+    <!-- api接口切换数据源 end -->
+
+    <!-- 课程空间 -->
+    <servlet>
+        <servlet-name>hessian-service</servlet-name>
+        <servlet-class>com.caucho.hessian.server.HessianServlet</servlet-class>
+        <init-param>
+            <param-name>home-class</param-name>
+            <param-value>com.whaty.framework.learnspace.impl.LearningSpaceStandardWebServiceImpl</param-value>
+        </init-param>
+        <init-param>
+            <param-name>home-api</param-name>
+            <param-value>com.whaty.framework.learnspace.LearningSpaceStandardWebService</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>hessian-service</servlet-name>
+        <url-pattern>/webService/LearningSpaceStandardWebService</url-pattern>
+    </servlet-mapping>
+
+    <!-- Spring MVC servlet -->
+    <servlet>
+        <servlet-name>SpringMVC</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SpringMVC</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>/index.html</welcome-file>
+    </welcome-file-list>
+    <!--<error-page>
+        <error-code>404</error-code>
+        <location>/error/404.html</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error/500.html</location>
+    </error-page>-->
+
+</web-app>

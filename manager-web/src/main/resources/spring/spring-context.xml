@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <bean id="placeholderConfig"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:druid.properties</value>
+                <value>classpath:jdbc.properties</value>
+                <value>classpath:hessian.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- spring bean扫描范围 -->
+    <context:component-scan base-package="com.whaty"/>
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- 启用异步方法支持 -->
+    <task:executor id="asyncImportExecutor" pool-size="3-20" queue-capacity="10" keep-alive="60"/>
+    <task:annotation-driven executor="asyncImportExecutor"/>
+
+    <bean id="myTransactionManager"
+          class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- 拦截器方式配置事务
+		事务隔离级别propagation取值：[REQUIRED, SUPPORTS, MANDATORY, REQUIRES_NEW, NOT_SUPPORTED, NEVER, NESTED] -->
+    <tx:advice id="transactionAdvice" transaction-manager="myTransactionManager">
+        <tx:attributes>
+            <tx:method name="create*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+            <tx:method name="save*" propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+            <tx:method name="update*" propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+            <tx:method name="del*" propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+            <tx:method name="remove*" propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+            <tx:method name="do*" propagation="REQUIRED"  rollback-for="java.lang.Exception"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config proxy-target-class="true">
+        <aop:pointcut id="transactionPointcut" expression="execution(* *..service..*.*(..))" />
+        <aop:advisor pointcut-ref="transactionPointcut" advice-ref="transactionAdvice" />
+    </aop:config>
+
+    <bean id="core_generalDao" class="com.whaty.core.commons.hibernate.dao.impl.GeneralHibernateDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="controlGeneralDao" class="com.whaty.core.framework.hibernate.dao.impl.ControlGeneralDao" parent="core_generalDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="core_generalService" class="com.whaty.core.commons.hibernate.service.impl.GeneralServiceImp">
+        <property name="generalDao" ref="core_generalDao"/>
+    </bean>
+</beans>

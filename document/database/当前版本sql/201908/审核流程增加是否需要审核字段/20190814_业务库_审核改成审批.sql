@@ -1,0 +1,1 @@
+update enum_const set note = '是否需要审批，为否可以申请时直接审批通过' where namespace = 'flagNeedCheck';

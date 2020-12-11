@@ -1,0 +1,40 @@
+-- 需求追踪管理 sql语句问题
+UPDATE `grid_basic_config` SET  `sqlstr`='SELECT\n  re.id as id,\n	re.serial as serial,\n  re.customer as customer,\n  area.name as area,\n  re.linkman as linkman,\n  re.link_phone as linkPhone,\n  tt.name as target,\n  re.requirement_info as requirementInfo,\n  source.name as source,\n  cre.name as createUser,\n  re.create_time as createTime,\n  man.name as followUpUser,\n  re.accept_time as acceptTime,\n  rt.name as requirementStatus,\n  ft.name as followUpStatus,\n  ft.id as followUpStatusId,\n  re.daily_training_fee as dailyTrainingFee,\n  re.daily_room_fee as dailyRoomFee,\n  re.daily_transport_fee as dailyTransportFee,\n  re.daily_food_fee as dailyFoodFee,\n  re.daily_tea_break_fee as dailyTeaBreakFee,\n  re.other_fee as otherFee,\n  re.note as note\nFROM\n	requirement_info re \ninner join pe_area area on area.id=re.fk_area_id\nINNER JOIN enum_const tt on tt.id=re.flag_training_target\nINNER JOIN enum_const source on source.id=re.flag_info_source\nINNER JOIN pe_manager cre on re.fk_create_user_id=cre.id\nINNER JOIN pe_manager man on re.fk_follow_up_user_id=man.id\nINNER JOIN sso_user sso on sso.id=man.fk_sso_user_id  and sso.id = \'${currentUserId}\'\nINNER JOIN enum_const rt on rt.id=re.flag_requirement_status\nLEFT JOIN enum_const ft on ft.id=re.flag_follow_up_status\nwhere \n     re.site_code = \'${siteCode}\'' WHERE (`id`='requirementInfoFollowUpList');
+
+
+-- 用印管理 添加时不显示申请单位  设置toadd=0
+UPDATE `grid_column_config` SET `to_add`='0' WHERE (`ID`='4028aefc6c2313b2016c2318d38f0001');
+-- 印刷管理 添加时不显示单位  设置toadd=0
+UPDATE `grid_column_config` SET `to_add`='0' WHERE (`ID`='4028aefc6c273f45016c27918af60001');
+
+
+-- 需求跟进列表 新增 附件管理
+INSERT INTO `grid_menu_config` (`fk_grid_id`, `flag_menu_type`, `flag_integrated_menu_type`, `text`, `show_type`, `column_type`, `fix`, `must_select_row`, `select_limit`, `data_index`, `null_text`, `show_confirm`, `confirm_text`, `url`, `extra_parameters`, `waiting_msg`, `success_msg`, `error_msg`, `open_mode`, `form_config`, `user_type`, `flag_is_valid`, `serial_number`, `script`, `column_data_index`, `value`, `tips`, `extend_menu_config`) 
+VALUES ('requirementInfoFollowUpList', 'a92817f1361611e8a37efcaa140ebf84', NULL, '附件管理', 'column', 'left', '0', '0', '1', 'id', '', '1', '', NULL, NULL, '', NULL, NULL, '_blank', NULL, NULL, '2', '3', NULL, NULL, NULL, '', '{\"fieldName\": \"parentId\", \"routerName\": \"attachFileManage\", \"namespace\": \"requirementInfoFollowUp\", \"isShowNav\": false}');
+
+-- 给培训管理平台 添加 附件管理 子菜单 
+INSERT INTO `pe_pri_category` (`ID`, `NAME`, `FK_PARENT_ID`, `CODE`, `PATH`, `FLAG_LEFT_MENU`, `serial_Number`, `isActive`, `LEVEL`, `fk_grid_id`, `fk_web_site_id`, `icon`, `fk_base_category_id`, `base_id`, `show_in_left_menu`) 
+VALUES ('4028ae0e6c743337016c7472e1870000', '附件管理', '4028aec76c22b5f4016c2371fe040021', NULL, NULL, '1', '1', '1', '3', NULL, '4028ae316a09ee85016a09f4d7640000', NULL, '1010', 'd9778bba22ac48b79290083fef498a17', '0');
+
+
+-- 资源管理的培训教室 增加新列 是否有效 
+INSERT INTO `grid_column_config` (`ID`, `fk_action_grid_config_id`, `name`, `dataindex`, `data_column`, `search`, `to_add`, `to_update`, `column_can_update`, `list`, `report`, `type`, `dateFormat`, `allow_blank`, `max_length`, `check_message`, `check_regular`, `text_field_parameters`, `combo_sql`, `serial_number`, `flag_active`, `flag_bak`, `user_type`, `team`, `s_note`, `sql_result`, `is_html`, `default_text`, `cascade_columns`) 
+VALUES (replace(uuid(),"-",""), 'placeResourceManage', '是否有效', 'combobox_enumConstByFlagISValid.flagIsValidName', 'enumConstByFlagISValid.name', '1', '1', '1', '1', '1', '1', 'select', 'yyyy-MM-dd', '0', '50', '', '', NULL, '', '7', '4028809c1d625bcf011d66fd0dda0006', NULL, NULL, '', '', 'enumConstByFlagISValid.name', NULL, '', NULL);
+
+-- 资源管理的培训教室 更新 查询配置
+UPDATE `grid_basic_config` SET `sqlstr`='SELECT\n	place.id AS id,\n	place. NAME AS name,\n	unit.id AS unitId,\n	unit.`name` AS unitName,\n	place.capacity AS capacity,\n	place.charges AS charges,\n	fsz.id AS schoolZoneId,\n	fsz. NAME AS schoolZoneName,\n	ec.`NAME` AS flagIsValidName\nFROM\n	pe_place place\nINNER JOIN pe_unit unit ON unit.id = place.fk_place_unit\nAND [peUnit|unit.id]\nINNER JOIN enum_const fsz ON fsz.id = place.flag_school_zone\nINNER JOIN enum_const ec ON ec.id = place.flag_is_valid\nWHERE\n	place.site_code = \'${siteCode}\'' WHERE (`id`='placeResourceManage');
+
+
+-- 设置安排固定地点  from_config
+UPDATE `grid_menu_config` SET `flag_menu_type`='dc8475e8ff1a11e7ab1d001e671d0be8', `flag_integrated_menu_type`=NULL,  `show_type`='top', `column_type`='left', `fix`='0', `must_select_row`='1', `select_limit`='1', `data_index`='id', `null_text`='', `show_confirm`='1', `confirm_text`='', `url`=NULL, `extra_parameters`=NULL, `waiting_msg`='', `success_msg`=NULL, `error_msg`=NULL, `open_mode`='_blank', `form_config`='{formTitle: \'安排固定地点\', requestConfig: {url:\'/entity/clazz/classTrainingPlaceManage/setTrainingPlace\', waitingMsg:\'处理中，请稍候...\'}, formFieldList:[{name:\'placeId\', type:\'select\', labelText:\'请选择培训地点\', selectDataMode:\'local\', selectDataUrl:\'/entity/clazz/classTrainingPlaceManage/validPlace\'}]}', `user_type`=NULL, `flag_is_valid`='2', `serial_number`='2', `script`=NULL, `column_data_index`=NULL, `value`=NULL, `tips`='', `extend_menu_config`='' WHERE (`fk_grid_id`='classTrainingPlaceManage' AND `text`='安排固定地点');
+
+
+-- 新增表委托人查询字段 
+INSERT INTO `grid_column_config` (`ID`, `fk_action_grid_config_id`, `name`, `dataindex`, `data_column`, `search`, `to_add`, `to_update`, `column_can_update`, `list`, `report`, `type`, `dateFormat`, `allow_blank`, `max_length`, `check_message`, `check_regular`, `text_field_parameters`, `combo_sql`, `serial_number`, `flag_active`, `flag_bak`, `user_type`, `team`, `s_note`, `sql_result`, `is_html`, `default_text`, `cascade_columns`) 
+VALUES ('4028ae0e6c756b29016c75bceb220000', 'classManage', '委托单位联系电话', 'entrustUnitLinkPhone', 'entrustUnitLinkPhone', '1', '0', '0', '0', '1', '1', 'TextField', 'yyyy-MM-dd', '0', '50', '', '', NULL, '', '5', '4028809c1d625bcf011d66fd0dda0006', NULL, NULL, '', '', '', NULL, '', NULL);
+INSERT INTO `grid_column_config` (`ID`, `fk_action_grid_config_id`, `name`, `dataindex`, `data_column`, `search`, `to_add`, `to_update`, `column_can_update`, `list`, `report`, `type`, `dateFormat`, `allow_blank`, `max_length`, `check_message`, `check_regular`, `text_field_parameters`, `combo_sql`, `serial_number`, `flag_active`, `flag_bak`, `user_type`, `team`, `s_note`, `sql_result`, `is_html`, `default_text`, `cascade_columns`) 
+VALUES ('4028ae0e6c756b29016c75bfad980001', 'classManage', '委托单位联系人', 'entrustUnitLinkman', 'entrustUnitLinkman', '1', '1', '1', '0', '1', '1', 'TextField', 'yyyy-MM-dd', '0', '50', '', '', NULL, 'SELECT\n	concat(eul.contacter,\'/\',eul.mobile_number)  as id,\n        concat(eul.contacter,\'/\',eul.mobile_number) as name\nFROM\n	entrusted_unit eu\nINNER JOIN entrusted_unit_linkman eul ON eul.fk_unit_id = eu.id\nINNER JOIN training_item ti ON ti.fk_entrusted_unit_id = eu.id\nWHERE \n  ti.id=:trainingItem_name\nAND eu.site_code = \'${siteCode}\'', '5', '4028809c1d625bcf011d66fd0dda0006', NULL, NULL, '', '', '', NULL, '', NULL);
+
+-- 原有 委托查询字段设置为不生效
+UPDATE `grid_column_config` SET `name`='委托单位联系人', `search`='0', `to_add`='0', `to_update`='0', `column_can_update`='0', `list`='0', `report`='0', `type`='TextField', `dateFormat`='yyyy-MM-dd', `allow_blank`='1', `max_length`='50', `check_message`='', `check_regular`='', `text_field_parameters`=NULL, `combo_sql`='', `serial_number`='5', `flag_active`='4028809c1d625bcf011d66fdb39f0007'  WHERE (`ID`='4028aec76c4188bf016c41a474b20001');
+UPDATE `grid_column_config` SET ``name`='委托单位联系电话', `search`='0', `to_add`='0', `to_update`='0', `column_can_update`='0', `list`='0', `report`='0', `type`='TextField', `dateFormat`='yyyy-MM-dd', `allow_blank`='1', `max_length`='50', `check_message`='', `check_regular`='', `text_field_parameters`=NULL, `combo_sql`='', `serial_number`='5', `flag_active`='4028809c1d625bcf011d66fdb39f0007' WHERE (`ID`='4028aec76c4188bf016c41a52daf0002');

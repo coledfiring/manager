@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 缓存服务 -->
+    <bean id="core_redisCacheService" class="com.whaty.framework.cache.core.service.impl.DefaultRedisService">
+        <property name="redisConfigPath" value="redis.properties"/>
+    </bean>
+
+    <!--单站点项目不需要这个切面；多站点下需要把grid配置独立库统一管理时才需要；-->
+    <bean id="dataSourceCutAop" class="com.whaty.core.framework.aop.DataSourceCutAop" />
+    <aop:config>
+        <aop:aspect id="dataSourceAspect" ref="dataSourceCutAop" order="1">
+            <aop:pointcut id="controlService" expression="execution(* com.whaty.core.framework.service..*.*(..))" />
+            <aop:before pointcut-ref="controlService" method="doBefore"/>
+            <aop:after pointcut-ref="controlService" method="doAfter"/>
+            <!--<aop:after-throwing pointcut-ref="controlService" method="doThrowing" throwing="ex" />-->
+        </aop:aspect>
+    </aop:config>
+</beans>

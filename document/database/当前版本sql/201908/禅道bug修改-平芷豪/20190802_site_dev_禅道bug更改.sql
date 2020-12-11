@@ -1,0 +1,1 @@
+UPDATE `enum_const` SET `ID`='4028ae316a6c3171016a6c44a368000f', `NAME`='审批通过', `CODE`='2', `NAMESPACE`='flagApplyCertificateStatus', `IS_DEFAULT`='0', `CREATE_DATE`=NULL, `NOTE`='申请培训证书状态', `TEAM`='' WHERE (`ID`='4028ae316a6c3171016a6c44a368000f');

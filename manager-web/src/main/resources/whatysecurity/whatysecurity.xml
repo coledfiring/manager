@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <!-- 不支持正则表达式 -->
+    <exclusion>
+        <!--<url value="/exclusion/test.jsp"/>
+        <url value="/exclusion/test1.jsp"/>-->
+    </exclusion>
+    <filters>
+        <!-- url支持正则表达式 -->
+        <filter name="xss">
+            <!-- 0 表示不限制  1表示html限制，url支持正则表达式 不填写parm为全部参数，参数可以,号隔开-->
+            <!--<item url="^/standard/blank_\w+.action" param="a,b" type="0"/>
+            <item url="^/examples/upload_upload.action" param="note" type="1"/>-->
+            <item url="^/user/\w+.do" param="ip" type="1"/>
+            <item url="^/user/httpsend/\w+.do" param="ip" type="1"/>
+        </filter>
+        <filter name="upload">
+            <!-- 1 表示大小不限制  2表示类型不限制 3都不限制 url不支持正则，参数可以,号隔开-->
+           <item url="/entity/common/attachFile/uploadAttachFile" param="upload" type="1"/>
+        </filter>
+        <filter name="sql">
+            <!-- url支持正则，不填写parm为全部参数，参数可以,号隔开-->
+            <!--<item url="^/examples/upload_\w+.action" param="field1,field2"/>-->
+
+        </filter>
+    </filters>
+</root>

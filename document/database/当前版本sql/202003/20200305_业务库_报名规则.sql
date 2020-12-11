@@ -1,0 +1,10 @@
+ALTER TABLE training_item ADD COLUMN fk_enroll_regulation_id int(9) DEFAULT NULL COMMENT '报名规则';
+ALTER TABLE training_item ADD COLUMN flag_enroll_need_check varchar(50) DEFAULT NULL COMMENT '学生报名时是否需要审核';
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('8f432744627511ea80f4fcaa140ebf84', '是', '1', 'FlagEnrollNeedCheck', '0', '2020-03-10 10:19:24', '学生报名时是否需要审核', NULL);
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('8f47ccb7627511ea80f4fcaa140ebf84', '否', '0', 'FlagEnrollNeedCheck', '0', '2020-03-10 10:19:24', '学生报名时是否需要审核', NULL);
+update training_item ti inner join enum_const ty on ty.id = ti.flag_training_item_type set flag_enroll_need_check = '8f47ccb7627511ea80f4fcaa140ebf84' where ty.code = '1';
+ALTER TABLE pe_student ADD COLUMN flag_enroll_check_status varchar(50) DEFAULT NULL COMMENT '报名审核状态';
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('7c9171d3627811ea80f4fcaa140ebf84', '无需审核', '0', 'flagEnrollCheckStatus', '0', NULL, '学生报名审核状态', '');
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('7c93d9ef627811ea80f4fcaa140ebf84', '待审批', '1', 'flagEnrollCheckStatus', '0', NULL, '学生报名审核状态', '');
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('7c97ff4a627811ea80f4fcaa140ebf84', '审核通过', '2', 'flagEnrollCheckStatus', '0', NULL, '学生报名审核状态', '');
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('7ca0388c627811ea80f4fcaa140ebf84', '审核不通过', '3', 'flagEnrollCheckStatus', '0', NULL, '学生报名审核状态', '');

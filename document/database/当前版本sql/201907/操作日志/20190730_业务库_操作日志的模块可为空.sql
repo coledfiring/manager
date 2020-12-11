@@ -1,0 +1,1 @@
+ALTER TABLE operate_record MODIFY COLUMN flag_module_id varchar(50) DEFAULT NULL;

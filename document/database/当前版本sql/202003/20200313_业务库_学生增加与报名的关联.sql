@@ -1,0 +1,2 @@
+ALTER TABLE pe_student ADD COLUMN fk_enroll_person_id varchar(32) DEFAULT NULL COMMENT '对应报名人';
+ALTER TABLE pe_student ADD FOREIGN KEY student_enroll_person_fk(fk_enroll_person_id) REFERENCES enroll_person(id);

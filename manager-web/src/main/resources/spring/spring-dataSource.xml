@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans                http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">  
+  <!-- 站点管理数据源-->  
+  <bean id="control" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
+    <property name="url" value="${control.datasource.url}"/>  
+    <property name="username" value="${datasource.username}"/>
+    <property name="password" value="${datasource.password}"/>
+    <property name="maxActive" value="${druid.maxActive}"/>  
+    <property name="initialSize" value="${druid.initialSize}"/>  
+    <property name="minIdle" value="${druid.minIdle}"/>  
+    <property name="maxWait" value="${druid.maxWait}"/>  
+    <property name="maxOpenPreparedStatements" value="${druid.maxOpenPreparedStatements}"/>  
+    <property name="validationQuery" value="${druid.validationQuery}"/>  
+    <property name="testWhileIdle" value="${druid.testWhileIdle}"/>  
+    <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}"/>  
+    <property name="testOnBorrow" value="${druid.testOnBorrow}"/>  
+    <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}"/>
+    <property name="maxEvictableIdleTimeMillis" value="${druid.maxEvictableIdleTimeMillis}"/>
+    <property name="useUnfairLock" value="${druid.useUnfairLock}"/> 
+  </bean>
+  <bean id="myDataSource" class="com.whaty.framework.jdbc.TycjMasterSlaveRoutingDataSource">
+    <property name="targetDataSources">
+      <map key-type="java.lang.String">
+        <entry key="control" value-ref="control"/>
+      </map>
+    </property>
+    <property name="defaultDataSource">
+      <map key-type="java.lang.String">
+        <entry key="control" value-ref="control"/>
+      </map>
+    </property>
+    <!-- 默认数据源使用站点管理的数据源 -->  
+    <property name="defaultTargetDataSource" ref="control"/>
+  </bean>  
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"> 
+    <property name="dataSource" ref="myDataSource"/>
+    <property name="packagesToScan"> 
+      <list> 
+        <value>com.whaty.**.bean</value> 
+      </list> 
+    </property>  
+    <property name="hibernateProperties"> 
+      <props> 
+        <prop key="hibernate.dialect">${hibernate.dialect}</prop>  
+        <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>  
+        <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>  
+        <prop key="javax.persistence.validation.mode">none</prop>  
+        <prop key="hibernate.jdbc.fetch_size">${hibernate.jdbc.fetch_size}</prop>  
+        <prop key="hibernate.jdbc.batch_size">${hibernate.jdbc.batch_size}</prop> 
+      </props> 
+    </property> 
+  </bean> 
+</beans>

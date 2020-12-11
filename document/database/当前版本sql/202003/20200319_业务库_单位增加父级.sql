@@ -1,0 +1,1 @@
+ALTER TABLE pe_unit ADD COLUMN fk_parent_id varchar(32) DEFAULT NULL COMMENT '父级id';

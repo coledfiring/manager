@@ -1,0 +1,14 @@
+loginAccessWhiteList:
+  exactURI: [/login1.jsp, /sso/authimg, /error/500.htm, /error/404.htm, /admin/admin_index.jsp,
+    /error/401.htm, /error/403.htm, /center/loginSmall.jsp, /loginSmall.jsp, /login.jsp,
+    /center/login.jsp, /admin/nimda_index.html, /admin/middle.jsp, /admin/manager_password_change.jsp,
+    /admin/manager_manage.jsp, /tool/functionButton.jsp, /admin/developer_module.jsp,
+    /admin/manager_password_changeexe.jsp, /userDefine/authortyConfig.jsp, /userDefine/system_variables.jsp,
+    /timer/tyxltimer.jsp, /tyxltimer.jsp, /timer/learntime.jsp, /learntime.jsp, /admin/logout.jsp,
+    /center/view/space/msgpwd.jsp, /center/view/space/learnStatistic.html, /checkserver.jsp, /index.html
+    /test/export.xls, /webService/LearningSpaceStandardWebService, /app/appDownLoad.jsp,
+    /app/download, /app/appAjax.jsp, /entity/manager/studentStatus/print_upload_file.jsp,
+    /userDefine/a.jsp, /userDefine/1.jsp, /admin/learning_data.jsp, /superAdmin/nimda_index.jsp,
+    /MP_verify_pGFVlDJDWHHfJkNU.txt, /webService/LearningSpaceStandardWebService]
+  prefixURI: [/db/, /learning/db/, /mobile/, /ueditor1_4_3_3/]
+  suffixURI: [.css, .action, .js, .png, .jpg, .gif, .html, .ico, .pdf]

@@ -1,0 +1,1 @@
+INSERT INTO `enum_const` (`ID`, `NAME`, `CODE`, `NAMESPACE`, `IS_DEFAULT`, `CREATE_DATE`, `NOTE`, `TEAM`) VALUES ('61bdec97fed511e9bd12fcaa140ebf84', '公告', '0', 'FlagMessageType', '1', NULL, '发送消息类型', '');

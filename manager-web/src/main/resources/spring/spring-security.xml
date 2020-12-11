@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/security/oauth2
+        http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security-3.2.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--接口访问控制 start-->
+    <sec:http pattern="/oauth/token" create-session="stateless"
+              authentication-manager-ref="authenticationManager" >
+        <sec:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
+        <sec:anonymous enabled="false" />
+        <sec:http-basic entry-point-ref="clientAuthenticationEntryPoint" />
+        <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+
+    <sec:http pattern="/api/token/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/api/token/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+
+    <!--退出登录接口权限-->
+    <sec:http pattern="/logout" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/logout" access="IS_AUTHENTICATED_FULLY" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+
+    <sec:http pattern="/ueditor1_4_3_3/**" create-session="never" security="none" />
+
+    <sec:http pattern="/websocket" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/websocket" access="IS_AUTHENTICATED_FULLY" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <sec:http pattern="/sockjs/websocket/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/sockjs/websocket/**" access="IS_AUTHENTICATED_FULLY" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+
+    <sec:http pattern="/cms/**" create-session="never" security="none" />
+    <sec:http pattern="/api/**" create-session="never" security="none" />
+    <sec:http pattern="/favicon.ico" create-session="never" security="none" />
+    <sec:http pattern="/workspace/**" create-session="never" security="none" />
+    <sec:http pattern="/ws/**" create-session="never" security="none" />
+    <sec:http pattern="/druid/**" create-session="never" security="none" />
+    <sec:http pattern="/superAdmin/siteConfig/siteConfigInfo/getSite" create-session="never" security="none" />
+
+    <sec:http pattern="/open/**" create-session="never" security="none" />
+    <sec:http pattern="/checkserver.jsp" create-session="never" security="none" />
+    <sec:http pattern="/srcAdd.jsp" create-session="never" security="none" />
+    <sec:http pattern="/lseVjecsoi.txt" create-session="never" security="none" />
+    <sec:http pattern="/MP_verify_6SubBFnvbKKIgMb7.txt" create-session="never" security="none" />
+    <sec:http pattern="/MP_verify_tdrysKYGW8t89rQg.txt" create-session="never" security="none" />
+    <sec:http pattern="/MP_verify_rvqp7YPEx0bNTRLD.txt" create-session="never" security="none"/>
+    <sec:http pattern="/MP_verify_BweHXlVLKAeEiYZU.txt" create-session="never" security="none"/>
+    <sec:http pattern="/MP_verify_NdqP4BIG3B7HHYBX.txt" create-session="never" security="none"/>
+    <sec:http pattern="/MP_verify_BnVKanzP007e6ZDc.txt" create-session="never" security="none"/>
+    <sec:http pattern="/MP_verify_DP3a4ulU5o7hFS5e.txt" create-session="never" security="none"/>
+    <sec:http pattern="/MP_verify_Upb66mgaJjqvk7Gg.txt" create-session="never" security="none"/>
+    <sec:http pattern="/MP_verify_haSd8hXAZd6dOoyE.txt" create-session="never" security="none"/>
+    <sec:http pattern="/MP_verify_HqcdH7b488xnQ6cZ.txt" create-session="never" security="none"/>
+    <sec:http pattern="/MP_verify_Uj767nPnd0a55Wqk.txt" create-session="never" security="none"/>
+    <sec:http pattern="/webService/LearningSpaceStandardWebService" create-session="never" security="none" />
+    <sec:http pattern="/index.html" create-session="never" security="none" />
+    <sec:http pattern="/images/**" create-session="never" security="none" />
+    <sec:http pattern="/incoming/**" create-session="never" security="none" />
+
+    <!-- todo -->
+    <sec:http pattern="/entity/analyse/analyseConfig/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/analyse/analyseConfig/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+
+    <!-- 班主任工作室 -->
+    <sec:http pattern="/entity/classMaster/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/classMaster/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+
+    <!-- 流程图设计 -->
+    <sec:http pattern="/superAdmin/flow/flowConfig/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/superAdmin/flow/flowConfig/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+    <!-- 流程图查看 -->
+    <sec:http pattern="/entity/flow/flowShow/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/flow/flowShow/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+    <sec:http pattern="/entity/energy/peEnergyTotalManage/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/energy/peEnergyTotalManage/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+    <sec:http pattern="/entity/energy/peEnergyDayManage/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/energy/peEnergyDayManage/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+    <!-- 操作日志查看 -->
+    <sec:http pattern="/entity/operateRecord/operateRecordSearch/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/operateRecord//**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+    <!-- 通用模板 -->
+    <sec:http pattern="/templatefile/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/templatefile/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+    <!-- 审核流程申请 -->
+    <sec:http pattern="/entity/flow/checkFlow/apply" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/flow/checkFlow/apply" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+    <!-- 站内信 -->
+    <sec:http pattern="/entity/message/stationMessageNotice/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/message/stationMessageNotice/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+
+    <sec:http pattern="/entity/message/sendAllMessage/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/message/sendAllMessage/**" access="ROLE_MANAGER,ROLE_SITE_ADMIN"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+
+    <sec:http pattern="/entity/message/weChatTemplateNotice/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/message/weChatTemplateNotice/**" access="ROLE_MANAGER,ROLE_SITE_ADMIN"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+
+    <!-- 个人信息 -->
+    <sec:http pattern="/entity/information/managerPersonInfo/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false"/>
+        <sec:intercept-url pattern="/entity/information/managerPersonInfo/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
+    </sec:http>
+
+    <sec:http pattern="/general/grid/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/general/grid/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+
+    <sec:http pattern="/sa/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/sa/**" access="ROLE_SUPER_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <sec:http pattern="/siteAdmin/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/siteAdmin/**" access="ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <sec:http pattern="/superAdmin/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/superAdmin/**" access="ROLE_SUPER_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <sec:http pattern="/core/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/core/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 通知推送 -->
+    <sec:http pattern="/notice/noticeInfo/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/notice/noticeInfo/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 数据看板 -->
+    <sec:http pattern="/entity/analyse/analyseBlock/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/entity/analyse/analyseBlock/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <sec:http pattern="/entity/analyse/analyseBoard/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/entity/analyse/analyseBoard/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <sec:http pattern="/analyse/dataBoard/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/analyse/dataBoard/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+
+    <sec:http pattern="/entity/common/attachFile/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/entity/common/attachFile/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 天气数据 -->
+    <sec:http pattern="/entity/yysj/weatherInfo/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/entity/yysj/weatherInfo/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 工作台 -->
+    <sec:http pattern="/entity/workspace/workbench/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/entity/workspace/workbench/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 数据看板查询图表 -->
+    <sec:http pattern="/entity/weCharts/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/entity/weCharts/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 通用打印 -->
+    <sec:http pattern="/entity/printTemplate/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/entity/printTemplate/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 操作引导 -->
+    <sec:http pattern="/guide/operateGuide/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/guide/operateGuide/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 通用查询 -->
+    <sec:http pattern="/common/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/common/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!-- 通用发送 -->
+    <sec:http pattern="/entity/sender/senderManage/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:intercept-url pattern="/entity/sender/senderManage/**" access="ROLE_SUPER_ADMIN,ROLE_MANAGER,ROLE_SITE_ADMIN" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+
+    <sec:http pattern="/**" create-session="never"
+              entry-point-ref="oauthAuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager">
+        <sec:anonymous enabled="false" />
+        <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+        <sec:custom-filter ref="filterSecurityInterceptor" before="FILTER_SECURITY_INTERCEPTOR" />
+        <sec:access-denied-handler ref="oauthAccessDeniedHandler" />
+    </sec:http>
+    <!--接口访问控制 end-->
+
+    <bean id="oauthAuthenticationEntryPoint"
+          class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+    </bean>
+
+    <bean id="clientAuthenticationEntryPoint"
+          class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+        <property name="realmName" value="springsec/client" />
+        <property name="typeName" value="Basic" />
+    </bean>
+
+    <bean id="oauthAccessDeniedHandler"
+          class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler">
+    </bean>
+
+    <bean id="clientCredentialsTokenEndpointFilter"
+          class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+    </bean>
+
+    <bean id="oauth2AccessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <constructor-arg>
+            <list>
+                <bean class="com.whaty.core.framework.oauth.GrantTypeVoter"/>
+                <bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter"/>
+                <bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+                <bean class="com.whaty.core.framework.oauth.UrlMatchVoter"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider user-service-ref="clientDetailsUserService" />
+    </sec:authentication-manager>
+
+    <bean id="clientDetailsUserService"
+          class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <constructor-arg ref="clientDetails" />
+    </bean>
+
+    <bean id="clientDetails" class="com.whaty.core.framework.oauth.CustomClientDetailsServiceImpl">
+        <property name="accessTokenValiditySeconds" value="7200" />
+    </bean>
+
+    <sec:authentication-manager id="userAuthenticationManager">
+        <sec:authentication-provider ref="customUserAuthenticationProvider" />
+    </sec:authentication-manager>
+
+    <bean id="customUserAuthenticationProvider"
+          class="com.whaty.core.framework.oauth.CustomUserAuthenticationProvider">
+    </bean>
+
+    <oauth:authorization-server
+            client-details-service-ref="clientDetails" token-services-ref="tokenServices" check-token-enabled="true" >
+        <oauth:authorization-code />
+        <oauth:implicit/>
+        <oauth:refresh-token/>
+        <oauth:client-credentials />
+        <oauth:password authentication-manager-ref="userAuthenticationManager"/>
+    </oauth:authorization-server>
+
+    <oauth:resource-server id="resourceServerFilter" resource-id="springsec" token-services-ref="tokenServicesProxy"
+                           token-extractor-ref="customTokenExtractor"/>
+    <bean id="customTokenExtractor" class="com.whaty.core.framework.oauth.CustomTokenExtractor"/>
+
+    <bean id="customTokenStore" class="com.whaty.core.framework.oauth.CustomRedisTokenStore">
+        <property name="clientDetailsService" ref="clientDetails" />
+    </bean>
+
+    <bean id="oauth2UserAuthenticationProvider" class="com.whaty.core.framework.oauth.remote.Oauth2UserAuthenticationProvider" />
+
+    <bean id="tokenServicesProxy" class="com.whaty.core.framework.oauth.remote.ResourceServerTokenServicesFactoryBean">
+        <property name="customRemoteTokenServices" ref="customRemoteTokenServices" />
+        <property name="defaultTokenServices" ref="tokenServices" />
+    </bean>
+
+    <bean id="customRemoteTokenServices" class="com.whaty.core.framework.oauth.remote.CustomRemoteTokenServices">
+        <property name="clientDetailsService" ref="clientDetails" />
+        <property name="authenticationProvider" ref="oauth2UserAuthenticationProvider" />
+    </bean>
+
+    <bean id="tokenServices"
+          class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <property name="tokenStore" ref="customTokenStore" />
+        <property name="supportRefreshToken" value="true" />
+        <property name="clientDetailsService" ref="clientDetails" />
+    </bean>
+
+    <bean id="securityMetadataSource" class="com.whaty.core.framework.oauth.UrlFilterInvocationSecurityMetadataSource" />
+
+    <bean id="filterSecurityInterceptor"
+          class="com.whaty.core.framework.oauth.UrlFilterSecurityInterceptor">
+        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="accessDecisionManager" ref="oauth2AccessDecisionManager"/>
+        <property name="securityMetadataSource" ref="securityMetadataSource" />
+    </bean>
+
+</beans>

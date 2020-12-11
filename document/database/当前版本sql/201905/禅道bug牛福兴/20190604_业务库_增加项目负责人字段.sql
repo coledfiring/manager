@@ -1,0 +1,1 @@
+ALTER TABLE training_item ADD COLUMN head_name varchar(20) DEFAULT NULL COMMENT '项目负责人';

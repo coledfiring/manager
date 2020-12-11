@@ -1,0 +1,9 @@
+loginUri: /loginPage
+logoutUri: /logout
+checkSessionPeriod: 60
+whiteUri:
+  - '*.js'
+  - '*.jpg'
+  - '*.css'
+openAutoLoginUri:
+  - '*.html'

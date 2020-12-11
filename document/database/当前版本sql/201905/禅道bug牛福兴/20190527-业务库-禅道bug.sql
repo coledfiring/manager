@@ -1,0 +1,1 @@
+alter table pe_hotel add column link_phone varchar(11) NOT null comment '联系电话';

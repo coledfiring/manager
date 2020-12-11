@@ -1,0 +1,1 @@
+update grid_column_config set name = '是否需要审批' where name = '是否需要审核';
