@@ -25,4 +25,9 @@ public interface SiteConstant {
      */
     String SERVICE_SITE_CODE_HB = "sjtupx";
 
+    /**
+     * 站点control的code
+     */
+    String SERVICE_SITE_CODE_HMY = "hmy";
+
 }
