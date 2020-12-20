@@ -53,11 +53,11 @@ public class EmailNoticeStrategy implements AbstractNoticeStrategy {
             throw new ServiceException("选择的用户都未填写邮箱");
         }
         PlatformConfig platformConfig = PlatformConfigUtil.getPlatformConfig(SiteUtil.getSiteCode());
-        WhatyMailUtils.setSenderMail(platformConfig.getMailUser());
+       /* WhatyMailUtils.setSenderMail(platformConfig.getMailUser());
         WhatyMailUtils.setSenderMailPassword(platformConfig.getMailPassword());
         WhatyMailUtils.setSmtpServer(platformConfig.getMailSmtp());
         WhatyMailUtils.sendMail("培训平台邮件：" + params.get(MessageConstants.EMAIL_ARG_SUBJECT),
-                (String) params.get(MessageConstants.EMAIL_ARG_CONTENT), receive, new ArrayList<>());
+                (String) params.get(MessageConstants.EMAIL_ARG_CONTENT), receive, new ArrayList<>());*/
     }
 
     @Override

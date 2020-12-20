@@ -124,11 +124,11 @@
         <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
         <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
     </sec:http>
-    <sec:http pattern="/entity/energy/peEnergyTotalManage/**" create-session="never"
+    <sec:http pattern="/entity/energy/**" create-session="never"
               entry-point-ref="oauthAuthenticationEntryPoint"
               access-decision-manager-ref="oauth2AccessDecisionManager">
         <sec:anonymous enabled="false"/>
-        <sec:intercept-url pattern="/entity/energy/peEnergyTotalManage/**" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:intercept-url pattern="/entity/energy/**" access="IS_AUTHENTICATED_FULLY"/>
         <sec:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER"/>
         <sec:access-denied-handler ref="oauthAccessDeniedHandler"/>
     </sec:http>

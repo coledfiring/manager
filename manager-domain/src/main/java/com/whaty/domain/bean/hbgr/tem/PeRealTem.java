@@ -3,7 +3,6 @@ package com.whaty.domain.bean.hbgr.tem;
 import com.whaty.core.bean.AbstractBean;
 import com.whaty.core.framework.bean.EnumConst;
 import lombok.Data;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -77,6 +76,5 @@ public class PeRealTem extends AbstractBean {
     @Column(
             name = "address"
     )
-    @JsonIgnore
     private String address;
 }
